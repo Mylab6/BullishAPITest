@@ -19,15 +19,15 @@ public class BrowserSteps {
     @When("I enter the username {string}")
     public void iEnterTheUsername(String userName) {
 
-        var searchEle = driver.findElement(By.name("username"));
-        searchEle.sendKeys(userName);
+        var ele = driver.findElement(By.name("username"));
+        ele.sendKeys(userName);
     }
 
     @When("I enter the password {string}")
     public void iEnterThePassword(String password) {
 
-        var searchEle = driver.findElement(By.name("password"));
-        searchEle.sendKeys(password);
+        var ele = driver.findElement(By.name("password"));
+        ele.sendKeys(password);
     }
 
 
