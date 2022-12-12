@@ -6,68 +6,64 @@ import io.restassured.response.Response;
 import java.util.HashMap;
 import java.util.Map;
 
+// We keep all of our API calls in this class.
+// Using Rest Assured
+// https://github.com/rest-assured/rest-assured/wiki/Usage#static-imports
 public class Student {
 
 
-    public  int id;
+    public int id;
 
-     public  String firstName;
-        public String lastName;
-        public  String     nationality;
-        public  String studentClass;
+    public String firstName;
+    public String lastName;
+    public String nationality;
+    public String studentClass;
 
-
-
-        /*
-    public Student(int id, String firstName, String lastName, String nationality, String studentClass) {
-        this.id = id;
-        this.firstName = firstName ;
-        this.lastName = lastName;
-        this.nationality = nationality ;
-        this.studentClass = studentClass ;
-    }*/
 
     public static Student[] getAllStudents() {
         Response result = RestAssured.get("/fetchStudents");
         return result.body().as(Student[].class);
 
     }
-    public static Student[] getStudentById(int id ) {
+
+    public static Student[] getStudentById(int id) {
         Response result = RestAssured.given().queryParam("id", String.valueOf(id)).get("/fetchStudents");
         return result.body().as(Student[].class);
     }
-    public static Student[] getStudentById(int id, int expectedStatusCode ) {
+
+    public static Student[] getStudentById(int id, int expectedStatusCode) {
         Response result = RestAssured.given().queryParam("id", String.valueOf(id)).get("/fetchStudents");
         result.then().statusCode(expectedStatusCode);
         return result.body().as(Student[].class);
     }
+
     public static Student[] getStudentsByClassroom(String studentClass) {
         Response result = RestAssured.given().queryParam("studentClass", studentClass).get("/fetchStudents");
         return result.body().as(Student[].class);
     }
 
-    public  static  void deleteStudentByID(int id){
-        Map<String, String > deleteMap  = new HashMap<>();
-        deleteMap.put("id", String .valueOf(id));
+    public static void deleteStudentByID(int id) {
+        Map<String, String> deleteMap = new HashMap<>();
+        deleteMap.put("id", String.valueOf(id));
 
         Response result = RestAssured.given()
                 .header("Content-Type", "application/json")
                 .body(deleteMap).delete("/deleteStudent");
     }
 
-   public  static Response createStudent(String first, String last, String nationality, String studentClass, int id, int expectedStatusCode ) {
+    public static Response createStudent(String first, String last, String nationality, String studentClass, int id, int expectedStatusCode) {
 
-       Map<String, String> jsonPost = createStudentHashMap(first, last, nationality, studentClass, id);
-       Response result = RestAssured.given()
-       .header("Content-Type", "application/json")
-       .body(jsonPost)
-       .post("/addStudent");
+        Map<String, String> jsonPost = createStudentHashMap(first, last, nationality, studentClass, id);
+        Response result = RestAssured.given()
+                .header("Content-Type", "application/json")
+                .body(jsonPost)
+                .post("/addStudent");
         result.then().statusCode(expectedStatusCode);
         return result;
     }
 
     public static Map<String, String> createStudentHashMap(String first, String last, String nationality, String studentClass, int id) {
-        Map<String, String > jsonPost = new HashMap<>();
+        Map<String, String> jsonPost = new HashMap<>();
         jsonPost.put("firstName", first);
         jsonPost.put("lastName", last);
         jsonPost.put("nationality", nationality);
@@ -78,7 +74,7 @@ public class Student {
 
     public static void updateStudent(String first, String last, String nationality, String classroom, int id, int expectedStatusCode) {
 
-    createStudentHashMap(first,last,nationality,classroom,id);
+        createStudentHashMap(first, last, nationality, classroom, id);
         Map<String, String> jsonPost = createStudentHashMap(first, last, nationality, classroom, id);
         Response result = RestAssured.given()
                 .header("Content-Type", "application/json")
@@ -92,7 +88,7 @@ public class Student {
     @Override
     public String toString() {
 
-        return firstName + " " + lastName +" " + String.valueOf( id);
+        return firstName + " " + lastName + " " + id;
 
     }
 

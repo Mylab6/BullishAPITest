@@ -1,7 +1,5 @@
 package io.cucumber.skeleton;
 
-import dev.failsafe.internal.util.Assert;
-import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
@@ -9,61 +7,64 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import java.util.Random;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
-//import org.junit.jupiter.*;//Assume;
 import org.junit.jupiter.api.Assumptions;
 
-// https://github.com/rest-assured/rest-assured/wiki/Usage#static-imports
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class StepDefinitions {
+    //
+    public String baseUri = "http://localhost:9080";
+    public String basePath = "studentmgmt";
     private Scenario scenario;
 
-    //
-    public  String baseUri = "http://localhost:9080";
-    public  String basePath = "studentmgmt" ;
+    private static void validateStudentFields(int id, String firstName, String lastName, String nationality, String classroom, Student currentStudent) {
+        assertEquals(id, currentStudent.id);
+        assertEquals(firstName, currentStudent.firstName);
+        assertEquals(lastName, currentStudent.lastName);
+        assertEquals(nationality, currentStudent.nationality);
+        assertEquals(classroom, currentStudent.studentClass);
+    }
+
     @Before
-    public void beforeScenario(Scenario scenario){
+    public void beforeScenario(Scenario scenario) {
         RestAssured.baseURI = baseUri;
-        RestAssured.basePath = basePath ;
+        RestAssured.basePath = basePath;
         this.scenario = scenario;
         // cleanup before each test
         iFetchAndDeleteAllStudents();
     }
+
     @Before("@broken_api")
-    public void skip_scenario(Scenario scenario){
+    public void skip_scenario(Scenario scenario) {
         System.out.println("SKIP SCENARIO: " + scenario.getName());
         Assumptions.assumeTrue(false);
         //Assert.isTrue(true);
     }
 
-
     @Then("{int} students exist")
     public void IntStudentsExist(int numberOfStudents) {
-      Student[] students =   Student.getAllStudents();
-      var i = students.length;
-        assertEquals(numberOfStudents, i );
-      //assertEquals
+        Student[] students = Student.getAllStudents();
+        var i = students.length;
+        assertEquals(numberOfStudents, i);
+        //assertEquals
 
     }
-
 
     @Given("I fetch and delete all students")
     public void iFetchAndDeleteAllStudents() {
 
-      //  Person[] persons = given().when().get("person/").as(Person[].class);
+        //  Person[] persons = given().when().get("person/").as(Person[].class);
 
-      Student[] students =   Student.getAllStudents();
-        for (var student: students
-             ) {
+        Student[] students = Student.getAllStudents();
+        for (var student : students
+        ) {
             Student.deleteStudentByID(student.id);
         }
     }
 
     @When("Add a student named {string} {string} with id {int}, nationality {string}, classroom {string}")
     public void addAStudentNamedWithIdNationalityClassroom(String first, String last, int id, String nationality, String classroom) {
-        Response result = Student.createStudent(first, last,nationality,classroom,id,200);
+        Response result = Student.createStudent(first, last, nationality, classroom, id, 200);
     }
 
     @When("I delete a student with the id {int}")
@@ -75,29 +76,20 @@ public class StepDefinitions {
     @Then("Verify a student with id {int} is named {string} {string}, has nationality {string} and classroom {string}")
     public void verifyAStudentWithIdIsNamedHasNationalityAndClassroom(int id, String firstName, String lastName, String nationality, String classroom) {
 
-    Student currentStudent = Student.getStudentById(id)[0];
-    validateStudentFields(id, firstName, lastName, nationality, classroom, currentStudent);
+        Student currentStudent = Student.getStudentById(id)[0];
+        validateStudentFields(id, firstName, lastName, nationality, classroom, currentStudent);
 
 
     }
-
-    private static void validateStudentFields(int id, String firstName, String lastName, String nationality, String classroom, Student currentStudent) {
-        assertEquals( id, currentStudent.id) ;
-        assertEquals( firstName, currentStudent.firstName) ;
-        assertEquals( lastName, currentStudent.lastName) ;
-        assertEquals(nationality, currentStudent.nationality) ;
-        assertEquals(classroom, currentStudent.studentClass) ;
-    }
-
 
     @Then("{int} students exist from classroom {string}")
     public void studentsExistFromClassroom(int studentCount, String classroomName) {
         Student[] currentStudents = Student.getStudentsByClassroom(classroomName);
         assertEquals(studentCount, currentStudents.length);
 
-        for (Student student: currentStudents
-             ) {
-            assertEquals(classroomName,student.studentClass);
+        for (Student student : currentStudents
+        ) {
+            assertEquals(classroomName, student.studentClass);
         }
 
     }
@@ -105,13 +97,13 @@ public class StepDefinitions {
     @When("Add a student named {string} {string} with id {int}, nationality {string}, classroom {string}, expect status code {int}")
     public void addAStudentNamedWithIdNationalityClassroomExpectStatusCode(String first, String last, int id, String nationality, String classroom, int statusCode) {
 
-        Response result = Student.createStudent(first, last,nationality,classroom,id,statusCode);
+        Response result = Student.createStudent(first, last, nationality, classroom, id, statusCode);
 
     }
 
     @Then("A student with id {int}, changes their name to {string} {string}, nationality {string}, classroom {string}, expect status code {int}")
     public void aStudentWithIdChangesTheirNameToNationalityClassroom(int id, String first, String last, String nationality, String classroom, int statusCode) {
-    Student.updateStudent(first,last,nationality,classroom,id,statusCode);
+        Student.updateStudent(first, last, nationality, classroom, id, statusCode);
 
     }
 

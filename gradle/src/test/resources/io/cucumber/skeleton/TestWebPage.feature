@@ -1,5 +1,4 @@
 Feature: Test Web Page
-    # Test Web Page
 
   Scenario: Successfully login
     Given  I open a browser

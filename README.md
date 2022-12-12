@@ -6,6 +6,9 @@ https://github.com/cucumber/cucumber-java-skeleton
 
 Dependencies have been added using gradle , so it's recommended to use gradle to run tests.
 
+Run the provided jar API file, and in this project.
+
+
 cd gradle
 
 ./gradlew test --rerun-tasks --info
