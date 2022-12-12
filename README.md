@@ -10,6 +10,10 @@ cd gradle
 
 ./gradlew test --rerun-tasks --info
 
+After running the tests, an html report can be found here. 
+
+projectRoot/gradle/build/reports/tests/test/index.html
+
 TestAPI has 7 tests , one of which fails intentionally as the Swagger documentation is wrong. A query for a single for student that doesn't exist will always return a 200 OK status code, rather than a 404 Not Found status code.
 
 TestWebPage has 5 tests, all of which pass. 
