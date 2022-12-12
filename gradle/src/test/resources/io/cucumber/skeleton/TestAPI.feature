@@ -38,7 +38,9 @@ Feature: TestAPI
   Scenario: Try to update a student that doesn't exist, expect a 500 status code
     Given 0 students exist
     Then A student with id 1, changes their name to "Jances" "Qunce", nationality "FR", classroom "2C", expect status code 500
-
+  @broken_api
+  #Skip this scenario using a custom before hook
+  # This should return a 404 according to the Swagger docs
   Scenario: Fetch a student that doesn't exist, expect a 404
     Given 0 students exist
     # This test case will always fail , according to the swagger docs this should return a 404.

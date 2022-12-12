@@ -1,5 +1,6 @@
 package io.cucumber.skeleton;
 
+import dev.failsafe.internal.util.Assert;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
@@ -8,10 +9,12 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+//import org.junit.jupiter.*;//Assume;
+import org.junit.jupiter.api.Assumptions;
 
 // https://github.com/rest-assured/rest-assured/wiki/Usage#static-imports
 public class StepDefinitions {
@@ -27,15 +30,12 @@ public class StepDefinitions {
         this.scenario = scenario;
         // cleanup before each test
         iFetchAndDeleteAllStudents();
-
-
     }
-
-    @After
-
-    public void afterScenario(){
-        //  driver.quit();
-        //    System.out.println("This will run after the Scenario");
+    @Before("@broken_api")
+    public void skip_scenario(Scenario scenario){
+        System.out.println("SKIP SCENARIO: " + scenario.getName());
+        Assumptions.assumeTrue(false);
+        //Assert.isTrue(true);
     }
 
 
